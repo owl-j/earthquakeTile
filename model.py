@@ -193,13 +193,15 @@ class bd_attention_LSTM(nn.Module):
         #for next pass and so on, we will feed the context_vector and the prev hidden state of the preceeding decoder
         
         #TODO: i dont know what the first input should be so I put in each encoder output as the input.
+        decoder_input = enc_out
         decoder_hiddens = enc_hids
         decoder_outputs = []
         for i in range(target_seq_len):
-            decoder_input = enc_out[i].view(1, *enc_out[i].shape)
-            decoder_output, decoder_hiddens, att_weights = self.decoder(decoder_input, decoder_hiddens, enc_out)
+            #decoder_input = enc_out[i].view(1, *enc_out[i].shape)
+            decoder_input, decoder_hiddens, att_weights = self.decoder(decoder_input, decoder_hiddens, enc_out)
             #TODO: We can record the attention weights along the way but it was not implemented yet 
-            decoder_outputs.append(decoder_output.view(*decoder_output.shape[1:]).tolist())
+            #decoder_outputs.append(decoder_input.view(*decoder_output.shape[1:]).tolist())
+            decoder_outputs.append(decoder_input)
             #decoder outputs dimension: [total_inputs, batch_size, att_hid]
         
         #TODO: not sure if this flattening method is correct since it was not mentioned in the paper
